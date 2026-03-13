@@ -5,7 +5,7 @@ import Moon from "../images/moon.png";
 import Sun from "../images/sun-24.png";
 
 import ArrowWhite from "../images/arrowLeftWhite.png";
-import Arrowblack from "../images/arrowLeftblack.png";
+import ArrowBlack from "../images/arrowLeftBlack.png";
 import { Link } from "react-router-dom";
 
 export default function CountryDetails() {
@@ -43,7 +43,7 @@ export default function CountryDetails() {
           style={{ backgroundColor: darkMode ? "" : "#979797" }}
         >
           <Link className={!darkMode ? "back" : "dark-shade-2 back"} to={"/"}>
-            <img src={!darkMode ? Arrowblack : ArrowWhite} alt="" />
+            <img src={!darkMode ? ArrowBlack : ArrowWhite} alt="" />
             Back
           </Link>
         </div>
