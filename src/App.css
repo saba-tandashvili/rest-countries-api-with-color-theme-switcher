@@ -193,6 +193,7 @@ a {
   padding-right: 5%;
   border-bottom: solid 3px hsl(0, 0%, 90%);
   height: 80px;
+  background-color: white;
 }
 
 .country-details-header h1 {
@@ -218,6 +219,7 @@ a {
 
 .countryDetails {
   height: 100vh;
+  background-color: hsl(0, 0%, 97%);
 }
 
 .body {
@@ -310,24 +312,6 @@ a {
   font-size: 14px;
 }
 
-.dark-shade-1 {
-  background-color: #202c36;
-}
-
-.dark-shade-2 {
-  background-color: #2b3844;
-  color: white;
-  border: none;
-}
-
-.color-white {
-  color: white;
-}
-
-.no-box {
-  box-shadow: none;
-}
-
 @media (max-width: 1450px) {
   .content {
     padding-left: 5%;
@@ -417,4 +401,24 @@ a {
     width: 260px;
     height: 151px;
   }
+}
+
+
+
+.dark-shade-1 {
+  background-color: #202c36;
+}
+
+.dark-shade-2 {
+  background-color: #2b3844;
+  color: white;
+  border: none;
+}
+
+.color-white {
+  color: white;
+}
+
+.no-box {
+  box-shadow: none;
 }
