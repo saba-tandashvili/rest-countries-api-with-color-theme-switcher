@@ -10,6 +10,12 @@ import { Link } from "react-router-dom";
 interface Countryies {
   name: {
     common: string;
+    nativeName?: {
+      [key: string]: {
+        official: string;
+        common: string;
+      };
+    };
   };
   flags: {
     svg: string;
@@ -19,7 +25,6 @@ interface Countryies {
   region: string;
   subregion?: string;
   capital?: string[];
-  nativeName: string;
   currencies?: {
     [key: string]: {
       name: string;
