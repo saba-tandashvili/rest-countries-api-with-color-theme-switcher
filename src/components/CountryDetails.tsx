@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-import Data from "../data.json";
+import { useState, useEffect } from "react";
 import Moon from "../images/moon.png";
 import Sun from "../images/sun-24.png";
 
@@ -8,13 +7,54 @@ import ArrowWhite from "../images/arrowLeftWhite.png";
 import ArrowBlack from "../images/arrowLeftBlack.png";
 import { Link } from "react-router-dom";
 
+interface Countryies {
+  name: {
+    common: string;
+  };
+  flags: {
+    svg: string;
+    png: string;
+  };
+  population: number;
+  region: string;
+  subregion?: string;
+  capital?: string[];
+  nativeName: string;
+  currencies?: {
+    [key: string]: {
+      name: string;
+      symbol: string;
+    };
+  };
+  languages?: {
+    [key: string]: string;
+  };
+  borders?: string[];
+  topLevelDomain: string;
+}
+
 export default function CountryDetails() {
   const { countryName } = useParams();
   const [darkMode, setDarkMode] = useState(true);
+  const [countries, setCountries] = useState<Countryies[]>([]);
+
+  useEffect(() => {
+    fetch(`https://restcountries.com/v3.1/name/${countryName}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCountries(data);
+      })
+      .catch((err) => console.log(err));
+  }, [countryName]);
 
   const country =
-    Data.find((p) => p.name.toLowerCase() === countryName?.toLowerCase()) ||
-    Data[0];
+    countries.find(
+      (p) => p.name.common.toLowerCase() === countryName?.toLowerCase(),
+    ) || countries[0];
+
+  if (!country) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div
@@ -51,12 +91,15 @@ export default function CountryDetails() {
         <div className="countrydetails">
           <img src={country.flags.svg} alt="" />
           <div className={darkMode ? "color-white details" : "details"}>
-            <h1 className="name">{country.name}</h1>
+            <h1 className="name">{country.name.common}</h1>
 
             <div className="specifics">
               <div className="left">
                 <p>
-                  Native Name: <span>{country.nativeName}</span>
+                  Native Name:{" "}
+                  <span>
+                    {Object.values(country.name.nativeName ?? {})[0]?.common}
+                  </span>
                 </p>
                 <p>
                   Population: <span>{country.population}</span>
@@ -68,7 +111,7 @@ export default function CountryDetails() {
                   Sub Region: <span>{country.subregion}</span>
                 </p>
                 <p>
-                  Capital: <span>{country.capital}</span>
+                  Capital: <span>{country.capital?.[0]}</span>
                 </p>
               </div>
               <div className="right">
@@ -76,12 +119,15 @@ export default function CountryDetails() {
                   Top Level Domain: <span>{country.topLevelDomain}</span>
                 </p>
                 <p>
-                  Currencies: <span>{country.currencies?.[0]?.name}</span>
+                  Currencies:{" "}
+                  <span>
+                    {Object.values(country.currencies ?? {})[0]?.name}
+                  </span>
                 </p>
                 <p>
                   Languages:{" "}
                   <span className="languages">
-                    {country.languages?.map((lang) => lang.name).join(", ")}
+                    {Object.values(country.languages ?? {}).join(", ")}
                   </span>
                 </p>
               </div>
@@ -101,7 +147,6 @@ export default function CountryDetails() {
               ))}
             </div>
           </div>
-          .
         </div>
       </div>
     </div>
