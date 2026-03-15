@@ -1,23 +1,48 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Search from "../images/search.png";
 import DownArrow from "../images/down-arrow.png";
 import SearchWhite from "../images/search-13-24.png";
 import DownArrowWhite from "../images/arrow-204-24.png";
-import Data from "../data.json";
+// import Data from "../data.json";
 
 interface ContentProps {
   darkMode: boolean;
+}
+
+interface Countryies {
+  name: {
+    common: string;
+  };
+  flags: {
+    png: string;
+    svg: string;
+  };
+  population: number;
+  region: string;
+  capital?: string[];
 }
 
 export default function Content({ darkMode }: ContentProps) {
   const [search, setSearch] = useState("");
   const [region, setRegion] = useState("");
   const [regionList, setRegionList] = useState(false);
+  const [countries, setCountries] = useState<Countryies[]>([]);
 
-  const filteredData = Data.filter((country) =>
-    country.name.toLowerCase().includes(search.toLowerCase()) &&
-    (region === "" || country.region.toLowerCase() === region.toLowerCase())
+    useEffect(() => {
+      fetch(`https://restcountries.com/v3.1/all?fields=name,capital,flags,population,region`)
+        .then((res) => res.json())
+        .then((data) => {
+          setCountries(data);
+        })
+        .catch((err) => console.log(err));
+    });
+  
+
+  const filteredData = countries.filter(
+    (country) =>
+      country.name.common.toLowerCase().includes(search.toLowerCase()) &&
+      (region === "" || country.region.toLowerCase() === region.toLowerCase()),
   ).slice(0, 8)
 
   return (
@@ -46,13 +71,48 @@ export default function Content({ darkMode }: ContentProps) {
           <img src={!darkMode ? DownArrow : DownArrowWhite} alt="" />
           <div
             className={`regions ${!darkMode ? "" : "dark-shade-2 no-box"}`}
-            style={{display: regionList ? "" : "none"}}
+            style={{ display: regionList ? "" : "none" }}
           >
-            <p onClick={() => { setRegion("Africa"); setRegionList(false); }}>Africa</p>
-            <p onClick={() => { setRegion("Americas"); setRegionList(false); }}>Americas</p>
-            <p onClick={() => { setRegion("Asia"); setRegionList(false); }}>Asia</p>
-            <p onClick={() => { setRegion("Europe"); setRegionList(false); }}>Europe</p>
-            <p onClick={() => { setRegion("Oceania"); setRegionList(false); }}>Oceania</p>
+            <p
+              onClick={() => {
+                setRegion("Africa");
+                setRegionList(false);
+              }}
+            >
+              Africa
+            </p>
+            <p
+              onClick={() => {
+                setRegion("Americas");
+                setRegionList(false);
+              }}
+            >
+              Americas
+            </p>
+            <p
+              onClick={() => {
+                setRegion("Asia");
+                setRegionList(false);
+              }}
+            >
+              Asia
+            </p>
+            <p
+              onClick={() => {
+                setRegion("Europe");
+                setRegionList(false);
+              }}
+            >
+              Europe
+            </p>
+            <p
+              onClick={() => {
+                setRegion("Oceania");
+                setRegionList(false);
+              }}
+            >
+              Oceania
+            </p>
           </div>
         </div>
       </div>
@@ -60,13 +120,13 @@ export default function Content({ darkMode }: ContentProps) {
       <div className="countries">
         {filteredData.map((country) => (
           <Link
-            key={country.name}
+            key={country.name.common}
             className={`country ${!darkMode ? "" : "dark-shade-2 no-box"}`}
-            to={`/${country.name}`}
+            to={`/${country.name.common}`}
           >
-            <img src={country.flags.png} alt={country.name} />
+            <img src={country.flags.png} alt={country.name.common} />
             <div className="info">
-              <h1 className="name">{country.name}</h1>
+              <h1 className="name">{country.name.common}</h1>
               <div className="details">
                 <p className="population">
                   Population: <span>{country.population}</span>
